@@ -71,7 +71,6 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    // Más adelante validaremos el inicio de sesión.
                 },
                 modifier = Modifier
                     .fillMaxWidth()

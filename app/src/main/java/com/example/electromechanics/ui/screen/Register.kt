@@ -80,8 +80,6 @@ fun Register(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(12.dp))
-
-            // muestra mensaje de error si no coinciden las claves o si el rut ya existe
             if (state.errorMessage != null) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -91,7 +89,6 @@ fun Register(
                 )
             }
             Spacer(modifier = Modifier.height(20.dp))
-            // Botón de Registro
             Button(
                 onClick = {
                     viewModel.onRegisterClick(context) {
@@ -100,7 +97,7 @@ fun Register(
                             "¡Registro exitoso! Por favor inicia sesión.",
                             Toast.LENGTH_SHORT
                         ).show()
-                        onNavigateToLogin() // Retorna a la pantalla de Login
+                        onNavigateToLogin()
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
