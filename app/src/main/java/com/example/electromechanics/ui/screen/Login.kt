@@ -22,6 +22,7 @@ import com.example.electromechanics.ui.viewmodel.LoginViewModel
 
 @Composable
 fun LoginScreen(
+    onNavigateToRegister: () -> Unit = {},
     viewModel: LoginViewModel = viewModel()
 ) {
     val state = viewModel.uiState
@@ -77,6 +78,17 @@ fun LoginScreen(
                     .padding(top = 24.dp)
             ) {
                 Text("Iniciar sesión")
+            }
+
+            Button(
+                onClick = {
+                    onNavigateToRegister()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp)
+            ) {
+                Text("Registrarse")
             }
         }
     }
