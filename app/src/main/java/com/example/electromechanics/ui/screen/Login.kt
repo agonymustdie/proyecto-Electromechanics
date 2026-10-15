@@ -51,6 +51,12 @@ fun LoginScreen(
                 value = state.rut,
                 onValueChange = { viewModel.onRutChanged(it) },
                 label = { Text("RUT") },
+                isError = viewModel.rutError.isNotEmpty(),
+                supportingText = {
+                    if (viewModel.rutError.isNotEmpty()) {
+                        Text(viewModel.rutError)
+                    }
+                },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -63,6 +69,12 @@ fun LoginScreen(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 ),
+                isError = viewModel.passwordError.isNotEmpty(),
+                supportingText = {
+                    if (viewModel.passwordError.isNotEmpty()) {
+                        Text(viewModel.passwordError)
+                    }
+                },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -71,6 +83,7 @@ fun LoginScreen(
 
             Button(
                 onClick = {
+                    viewModel.validarLogin()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
