@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -23,20 +25,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.electromechanics.ui.components.Footer
+import com.example.electromechanics.ui.components.Header
 import com.example.electromechanics.ui.viewmodel.RegisterViewmodel
 
 
 @Composable
 fun Register(
     onNavigateToLogin: () -> Unit,
-    viewModel: RegisterViewmodel = viewModel()
+    viewModel: RegisterViewmodel = viewModel(),
 ){
     val state = viewModel.uiState
     val context = LocalContext.current
 
     Scaffold(
-        topBar = { null},
-        bottomBar = {null}
+        topBar = {Header("ELECTROMECHANICS")},
+        bottomBar = {Footer()}
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -90,11 +94,11 @@ fun Register(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(100.dp))
             // Botón de Registro
             Button(
                 onClick = {
-                    viewModel.onRegisterClick(context) {
+                    viewModel.onRegisterClick {
                         Toast.makeText(
                             context,
                             "¡Registro exitoso! Por favor inicia sesión.",
@@ -103,7 +107,13 @@ fun Register(
                         onNavigateToLogin() // Retorna a la pantalla de Login
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFF5A524),
+                    contentColor = Color(0xFF1B2328)
+                )
             ) {
                 Text(text = "Registrarse")
             }

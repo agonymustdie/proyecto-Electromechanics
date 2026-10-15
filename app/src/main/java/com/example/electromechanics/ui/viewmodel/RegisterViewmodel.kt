@@ -1,6 +1,5 @@
 package com.example.electromechanics.ui.viewmodel
 
-import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +22,7 @@ class RegisterViewmodel : ViewModel() {
         uiState = uiState.copy(confirmPassword = confirmPassword, errorMessage = null)
     }
 
-    fun onRegisterClick(context: Context, onSuccess: () -> Unit) {
+    fun onRegisterClick(onSuccess: () -> Unit) {
         val state = uiState
 
         if (state.rut.isBlank() || state.password.isBlank() || state.confirmPassword.isBlank()) {
@@ -35,6 +34,8 @@ class RegisterViewmodel : ViewModel() {
             uiState = uiState.copy(errorMessage = "Las contraseñas no coinciden.")
             return
         }
+
+        onSuccess()
 
     }
 
