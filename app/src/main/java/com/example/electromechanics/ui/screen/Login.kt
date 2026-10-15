@@ -28,7 +28,6 @@ fun LoginScreen(
     val state = viewModel.uiState
 
     Scaffold { paddingValues: PaddingValues ->
-
         Column(
             modifier = Modifier
                 .fillMaxSize()

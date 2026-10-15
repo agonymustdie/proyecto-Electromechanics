@@ -51,7 +51,6 @@ class LoginViewModel : ViewModel() {
         if (rutLimpio.length < 8 || rutLimpio.length > 9) {
             return false
         }
-
         return true
     }
 }
