@@ -28,7 +28,6 @@ fun LoginScreen(
     val state = viewModel.uiState
 
     Scaffold { paddingValues: PaddingValues ->
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -51,6 +50,12 @@ fun LoginScreen(
                 value = state.rut,
                 onValueChange = { viewModel.onRutChanged(it) },
                 label = { Text("RUT") },
+                isError = viewModel.rutError.isNotEmpty(),
+                supportingText = {
+                    if (viewModel.rutError.isNotEmpty()) {
+                        Text(viewModel.rutError)
+                    }
+                },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -63,6 +68,12 @@ fun LoginScreen(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 ),
+                isError = viewModel.passwordError.isNotEmpty(),
+                supportingText = {
+                    if (viewModel.passwordError.isNotEmpty()) {
+                        Text(viewModel.passwordError)
+                    }
+                },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -71,7 +82,7 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    // Más adelante validaremos el inicio de sesión.
+                    viewModel.validarLogin()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
