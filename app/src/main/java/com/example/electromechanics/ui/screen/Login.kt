@@ -19,6 +19,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.electromechanics.ui.viewmodel.LoginViewModel
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 @Composable
 fun LoginScreen(
@@ -26,6 +33,12 @@ fun LoginScreen(
     viewModel: LoginViewModel = viewModel()
 ) {
     val state = viewModel.uiState
+
+    var mostrarTitulo by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        mostrarTitulo = true
+    }
 
     Scaffold { paddingValues: PaddingValues ->
         Column(
@@ -37,9 +50,12 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Text(
-                text = "ELECTROMECHANICS"
-            )
+            AnimatedVisibility(
+                visible = mostrarTitulo,
+                enter = fadeIn()
+            ) {
+                Text(text = "ELECTROMECHANICS")
+            }
 
             Text(
                 text = "Inicio de sesión del empleado",
