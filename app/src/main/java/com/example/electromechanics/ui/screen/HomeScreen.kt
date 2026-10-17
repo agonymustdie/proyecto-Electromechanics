@@ -28,7 +28,8 @@ import com.example.electromechanics.ui.components.Header
 
 @Composable
 fun HomeScreen(
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onReporte: () -> Unit
 ) {
     Scaffold(
         topBar = { Header("ELECTROMECHANICS") },
@@ -107,7 +108,7 @@ fun HomeScreen(
                     )
 
                     Button(
-                        onClick = {},
+                        onClick = onReporte,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.secondary,
                             contentColor = MaterialTheme.colorScheme.onSecondary
