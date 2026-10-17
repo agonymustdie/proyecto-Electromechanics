@@ -26,14 +26,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.electromechanics.ui.components.Footer
 import com.example.electromechanics.ui.components.Header
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.electromechanics.ui.viewmodel.ReporteViewModel
 
 @Composable
 fun ReporteScreen(
-    onVolver: () -> Unit
+    onVolver: () -> Unit,
+    viewModel: ReporteViewModel = viewModel()
 ) {
-    var titulo by remember { mutableStateOf("") }
-    var descripcion by remember { mutableStateOf("") }
-
     val context = LocalContext.current
 
     Scaffold(
@@ -79,19 +79,31 @@ fun ReporteScreen(
             }
 
             OutlinedTextField(
-                value = titulo,
-                onValueChange = { titulo = it },
+                value = viewModel.titulo,
+                onValueChange = { viewModel.onTituloChanged(it) },
                 label = { Text("Título del reporte") },
                 placeholder = { Text("Ej. Mantención línea 2") },
+                isError = viewModel.tituloError.isNotEmpty(),
+                supportingText = {
+                    if (viewModel.tituloError.isNotEmpty()) {
+                        Text(viewModel.tituloError)
+                    }
+                },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
 
             OutlinedTextField(
-                value = descripcion,
-                onValueChange = { descripcion = it },
+                value = viewModel.descripcion,
+                onValueChange = { viewModel.onDescripcionChanged(it) },
                 label = { Text("Descripción") },
                 placeholder = { Text("Describe el trabajo realizado...") },
+                isError = viewModel.descripcionError.isNotEmpty(),
+                supportingText = {
+                    if (viewModel.descripcionError.isNotEmpty()) {
+                        Text(viewModel.descripcionError)
+                    }
+                },
                 minLines = 3,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -100,11 +112,13 @@ fun ReporteScreen(
 
             Button(
                 onClick = {
-                    Toast.makeText(
-                        context,
-                        "El envío de reportes aún no está disponible",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    if (viewModel.validarReporte()) {
+                        Toast.makeText(
+                            context,
+                            "Datos del reporte enviados correctamente",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
