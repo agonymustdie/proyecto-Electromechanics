@@ -7,12 +7,17 @@ import androidx.navigation.compose.rememberNavController
 import com.example.electromechanics.ui.screen.LoginScreen
 import com.example.electromechanics.ui.screen.Register
 import com.example.electromechanics.ui.screen.Start
+import com.example.electromechanics.ui.screen.HomeScreen
+import com.example.electromechanics.ui.screen.ReporteScreen
+import com.example.electromechanics.ui.screen.JornadaScreen
 
 object Routes {
     const val LOGIN = "login"
     const val REGISTER = "register"
-
     const val START = "start"
+    const val HOME = "home"
+    const val REPORTE = "reporte"
+    const val JORNADA = "jornada"
 }
 
 @Composable
@@ -22,8 +27,20 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Routes.START
+        startDestination = Routes.HOME
     ) {
+
+        composable(Routes.START) {
+            Start(
+                onNavigateToLogin = {
+                    navController.navigate(Routes.LOGIN)
+                },
+                onNavigateToRegister = {
+                    navController.navigate(Routes.REGISTER)
+                }
+            )
+        }
+
         composable(Routes.LOGIN) {
             LoginScreen(
                 onNavigateToRegister = {
@@ -36,21 +53,46 @@ fun AppNavigation() {
             Register(
                 onNavigateToLogin = {
                     navController.navigate(Routes.LOGIN) {
-                        // limpia la pila para no acumular pantallas login activas
-                        popUpTo(Routes.REGISTER) { inclusive = true }
+                        popUpTo(Routes.REGISTER) {
+                            inclusive = true
+                        }
                         launchSingleTop = true
                     }
                 }
             )
         }
 
-        composable(Routes.START) {
-            Start(
-                onNavigateToLogin = {
-                    navController.navigate(Routes.LOGIN)
+        composable(Routes.HOME) {
+            HomeScreen(
+                onLogout = {
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.HOME) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
                 },
-                onNavigateToRegister = {
-                    navController.navigate(Routes.REGISTER)
+                onReporte = {
+                    navController.navigate(Routes.REPORTE)
+                },
+                onJornada = {
+                    navController.navigate(Routes.JORNADA)
+                }
+            )
+        }
+
+        composable(Routes.REPORTE) {
+            ReporteScreen(
+                onVolver = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Routes.JORNADA) {
+            JornadaScreen(
+                onVolver = {
+                    navController.popBackStack()
                 }
             )
         }
