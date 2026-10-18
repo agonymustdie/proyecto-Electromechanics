@@ -98,7 +98,7 @@ fun Register(
             // Botón de Registro
             Button(
                 onClick = {
-                    viewModel.onRegisterClick {
+                    viewModel.onRegisterClick(context) {
                         Toast.makeText(
                             context,
                             "¡Registro exitoso! Por favor inicia sesión.",
