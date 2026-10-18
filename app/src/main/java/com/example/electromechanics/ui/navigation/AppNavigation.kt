@@ -6,10 +6,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.electromechanics.ui.screen.LoginScreen
 import com.example.electromechanics.ui.screen.Register
+import com.example.electromechanics.ui.screen.Start
 
 object Routes {
     const val LOGIN = "login"
     const val REGISTER = "register"
+
+    const val START = "start"
 }
 
 @Composable
@@ -19,7 +22,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Routes.LOGIN
+        startDestination = Routes.START
     ) {
         composable(Routes.LOGIN) {
             LoginScreen(
@@ -29,7 +32,7 @@ fun AppNavigation() {
             )
         }
 
-        composable (Routes.REGISTER){
+        composable(Routes.REGISTER) {
             Register(
                 onNavigateToLogin = {
                     navController.navigate(Routes.LOGIN) {
@@ -41,5 +44,15 @@ fun AppNavigation() {
             )
         }
 
+        composable(Routes.START) {
+            Start(
+                onNavigateToLogin = {
+                    navController.navigate(Routes.LOGIN)
+                },
+                onNavigateToRegister = {
+                    navController.navigate(Routes.REGISTER)
+                }
+            )
+        }
     }
 }
