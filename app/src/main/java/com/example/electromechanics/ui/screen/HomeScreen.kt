@@ -29,7 +29,8 @@ import com.example.electromechanics.ui.components.Header
 @Composable
 fun HomeScreen(
     onLogout: () -> Unit,
-    onReporte: () -> Unit
+    onReporte: () -> Unit,
+    onJornada: () -> Unit
 ) {
     Scaffold(
         topBar = { Header("ELECTROMECHANICS") },
@@ -78,7 +79,7 @@ fun HomeScreen(
                     )
 
                     Button(
-                        onClick = {}
+                        onClick = onJornada
                     ) {
                         Text("Iniciar turno")
                     }
