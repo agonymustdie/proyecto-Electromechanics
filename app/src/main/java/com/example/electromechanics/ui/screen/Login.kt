@@ -1,5 +1,6 @@
 package com.example.electromechanics.ui.screen
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -36,9 +38,11 @@ import com.example.electromechanics.ui.viewmodel.LoginViewModel
 @Composable
 fun LoginScreen(
     onNavigateToRegister: () -> Unit,
+    onLoginSuccess: () -> Unit,
     viewModel: LoginViewModel = viewModel()
 ) {
     val state = viewModel.uiState
+    val context = LocalContext.current
 
     var mostrarTitulo by remember { mutableStateOf(false) }
 
@@ -72,15 +76,15 @@ fun LoginScreen(
             }
 
             Spacer(modifier = Modifier.height(32.dp))
-
+            val errorMessage = viewModel.errorMessage
             OutlinedTextField(
                 value = state.rut,
                 onValueChange = { viewModel.onRutChanged(it) },
                 label = { Text("Ingrese su RUT") },
-                isError = viewModel.rutError.isNotEmpty(),
+                isError = errorMessage != null,
                 supportingText = {
-                    if (viewModel.rutError.isNotEmpty()) {
-                        Text(viewModel.rutError)
+                    if (errorMessage != null) {
+                        Text(errorMessage)
                     }
                 },
                 singleLine = true,
@@ -97,12 +101,7 @@ fun LoginScreen(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 ),
-                isError = viewModel.passwordError.isNotEmpty(),
-                supportingText = {
-                    if (viewModel.passwordError.isNotEmpty()) {
-                        Text(viewModel.passwordError)
-                    }
-                },
+                isError = errorMessage != null,
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -111,7 +110,10 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    viewModel.validarLogin()
+                    viewModel.onLoginClick(context){
+                        Toast.makeText(context, "Inicio de sesión exitoso" , Toast.LENGTH_SHORT).show()
+                        onLoginSuccess()
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
