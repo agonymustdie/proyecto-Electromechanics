@@ -1,6 +1,11 @@
 package com.example.electromechanics.ui.screen
 
+import android.content.ActivityNotFoundException
+import android.graphics.Bitmap
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,8 +14,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -22,6 +29,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.electromechanics.ui.components.Footer
@@ -35,7 +44,15 @@ fun ReporteScreen(
     viewModel: ReporteViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    var fotoBitmap by remember { mutableStateOf<Bitmap?>(null) }
 
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { bitmap: Bitmap? ->
+        if (bitmap != null) {
+            fotoBitmap = bitmap
+        }
+    }
     Scaffold(
         topBar = { Header("ELECTROMECHANICS") },
         bottomBar = { Footer() }
@@ -63,19 +80,31 @@ fun ReporteScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            OutlinedButton(
+            Card(
                 onClick = {
-                    Toast.makeText(
-                        context,
-                        "La cámara aún no está disponible",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    try {
+                        cameraLauncher.launch(null)
+                    } catch (e: ActivityNotFoundException) {
+                        Toast.makeText(
+                            context,
+                            "No se encontró una app para abrir la cámara",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(110.dp)
+                    .height(110.dp),
+                shape = RoundedCornerShape(8.dp)
             ) {
-                Text("Toca para subir una foto")
+                fotoBitmap?.let { foto ->
+                    Image(
+                        bitmap = foto.asImageBitmap(),
+                        contentDescription = "Foto del reporte",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                } ?:Text("Toca para subir una foto")
             }
 
             OutlinedTextField(
