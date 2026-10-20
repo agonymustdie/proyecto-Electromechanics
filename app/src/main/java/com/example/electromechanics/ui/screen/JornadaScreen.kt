@@ -1,5 +1,10 @@
 package com.example.electromechanics.ui.screen
 
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,15 +28,65 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.example.electromechanics.ui.components.Footer
 import com.example.electromechanics.ui.components.Header
+import com.google.android.gms.location.LocationServices
+import android.Manifest
 
 @Composable
 fun JornadaScreen(
     onVolver: () -> Unit
 ) {
     var turnoIniciado by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context)}
+
+    @SuppressLint("MissingPermision")
+    fun registerUbicacion(accion:String) {
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                Log.d("Turno", "Latitud: ${location.latitude}, Longitud: ${location.longitude}")
+            }
+        }
+    }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ){ isGranted ->
+        if (isGranted) {
+            turnoIniciado = true
+            registerUbicacion("Inicio de turno")
+        }else{
+            Log.d("Turno", "Permiso denegado")
+        }
+    }
+
+    fun onTurnoClick(){
+        if (turnoIniciado) {
+            turnoIniciado = false
+            registerUbicacion("Fin de turno")
+            return
+        }else{
+            val tienePermiso = ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if (tienePermiso) {
+                turnoIniciado = true
+                registerUbicacion("Inicio de turno")
+            }else{
+                permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+        }
+    }
+
+
+
+
+
 
     Scaffold(
         topBar = { Header("ELECTROMECHANICS") },
@@ -88,8 +143,8 @@ fun JornadaScreen(
                     )
 
                     Button(
-                        onClick = {
-                            turnoIniciado = !turnoIniciado
+                        onClick = { onTurnoClick()
+
                         }
                     ) {
                         Text(

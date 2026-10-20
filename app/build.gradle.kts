@@ -40,6 +40,7 @@ android {
 dependencies {
     val room_version = "2.8.4"
     ksp("androidx.room:room-compiler:$room_version")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
